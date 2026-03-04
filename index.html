@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CACD & CTAF — Chennai Institute of Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #070F2B;
+      --navy2: #0D1B4B;
+      --navy3: #0A1535;
+      --gold: #D4AF37;
+      --gold2: #c9a227;
+      --white: #ffffff;
+      --muted: rgba(255,255,255,0.5);
+      --muted2: rgba(255,255,255,0.25);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--navy); color: var(--white); font-family: 'Cormorant Garamond', serif; overflow-x: hidden; }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 70px; padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(10,20,50,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s ease;
+    }
+    nav.scrolled { background: rgba(10,20,50,0.97); border-bottom-color: rgba(212,175,55,0.3); }
+    .nav-brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .nav-brand img { height: 44px; border-radius: 4px; }
+    .nav-brand-text { line-height: 1.2; }
+    .nav-brand-title { color: var(--gold); font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; }
+    .nav-brand-sub { color: var(--muted2); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 0.25rem; align-items: center; }
+    .nav-link {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.8); font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; padding: 0.5rem 0.9rem; letter-spacing: 0.05em;
+      border-bottom: 2px solid transparent; transition: all 0.2s;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--gold); font-size: 1.5rem; }
+    .mobile-menu {
+      display: none; position: fixed; top: 70px; left: 0; right: 0;
+      background: rgba(10,20,50,0.98); border-bottom: 1px solid rgba(212,175,55,0.3);
+      z-index: 99;
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-link {
+      display: block; width: 100%; background: none; border: none;
+      color: rgba(255,255,255,0.8); font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; padding: 0.85rem 1.5rem; text-align: left; cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.05); transition: color 0.2s;
+    }
+    .mobile-link:hover { color: var(--gold); }
+
+    /* ── PAGES ── */
+    .page { display: none; min-height: 100vh; padding-top: 70px; }
+    .page.active { display: block; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; padding-top: 0 !important;
+      background: linear-gradient(135deg, #070F2B 0%, #0D1B4B 50%, #0A1535 100%);
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden;
+    }
+    .hero-circle1 { position: absolute; top: 10%; right: 5%; width: 300px; height: 300px; border-radius: 50%; border: 1px solid rgba(212,175,55,0.1); pointer-events: none; animation: rotate 20s linear infinite; }
+    .hero-circle2 { position: absolute; bottom: 15%; left: 3%; width: 200px; height: 200px; border-radius: 50%; border: 1px solid rgba(212,175,55,0.08); pointer-events: none; animation: rotate 15s linear infinite reverse; }
+    .hero-dot { position: absolute; top: 30%; left: 8%; width: 80px; height: 80px; border-radius: 50%; background: rgba(212,175,55,0.05); pointer-events: none; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .hero-badge { display: inline-block; border: 1px solid rgba(212,175,55,0.4); padding: 0.3rem 1.2rem; border-radius: 2px; margin-bottom: 1.5rem; }
+    .hero-badge span { color: var(--gold); font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 5rem); color: var(--white); margin-bottom: 0.5rem; line-height: 1.15; }
+    .hero-title span { color: var(--gold); }
+    .hero-subtitle-wrap { height: 3.5rem; overflow: hidden; margin-bottom: 1.5rem; }
+    .hero-subtitle { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 3vw, 2rem); color: rgba(255,255,255,0.7); animation: fadeSlide 0.6s ease forwards; }
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-desc { color: var(--muted); max-width: 560px; margin: 0 auto 2.5rem; line-height: 1.8; font-size: 1rem; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--gold); color: var(--navy); border: none;
+      padding: 0.85rem 2.2rem; font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-weight: 700; cursor: pointer; letter-spacing: 0.05em;
+      transition: all 0.25s; border-radius: 2px;
+    }
+    .btn-primary:hover { background: var(--gold2); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent; color: var(--gold); border: 1px solid var(--gold);
+      padding: 0.85rem 2.2rem; font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; cursor: pointer; letter-spacing: 0.05em;
+      transition: all 0.25s; border-radius: 2px;
+    }
+    .btn-outline:hover { background: rgba(212,175,55,0.1); transform: translateY(-2px); }
+    .hero-scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); animation: bounce 2s infinite; }
+    .hero-scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, transparent, var(--gold)); margin: 0 auto; }
+    @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-10px); } }
+
+    /* ── STATS ── */
+    .stats { background: var(--navy3); padding: 4rem 2rem; border-top: 1px solid rgba(212,175,55,0.15); border-bottom: 1px solid rgba(212,175,55,0.15); }
+    .stats-grid { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--gold); font-weight: 700; }
+    .stat-label { color: var(--muted); font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.25rem; }
+
+    /* ── SECTION COMMON ── */
+    .section { padding: 5rem 2rem; }
+    .section-inner { max-width: 1000px; margin: 0 auto; }
+    .section-tag { color: var(--gold); letter-spacing: 0.2em; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .section-title { font-family: 'Playfair Display', serif; color: var(--white); font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 3rem; }
+    .section-rule { width: 60px; height: 2px; background: var(--gold); margin-bottom: 2rem; }
+    .section-title-lg { font-family: 'Playfair Display', serif; color: var(--white); font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1rem; }
+
+    /* ── CARDS ── */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 4px; padding: 1.75rem; transition: all 0.3s; cursor: pointer;
+    }
+    .card:hover { border-color: rgba(212,175,55,0.5); transform: translateY(-4px); background: rgba(212,175,55,0.05); }
+    .card-gold { background: rgba(212,175,55,0.05); border: 1px solid rgba(212,175,55,0.25); border-radius: 4px; padding: 2rem; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── EVENTS ── */
+    .event-date { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.2rem; font-weight: 700; }
+    .event-tag { background: rgba(212,175,55,0.15); color: var(--gold); font-size: 0.65rem; letter-spacing: 0.15em; padding: 0.2rem 0.6rem; border-radius: 2px; }
+    .event-title { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 1.2rem; margin: 0.5rem 0; }
+    .event-desc { color: rgba(255,255,255,0.45); font-size: 0.9rem; line-height: 1.6; }
+
+    /* ── TESTIMONIALS ── */
+    .quote-mark { font-size: 3rem; color: var(--gold); opacity: 0.3; font-family: Georgia; line-height: 0.8; margin-bottom: 1rem; }
+    .quote-text { color: rgba(255,255,255,0.7); font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
+    .quote-divider { border-top: 1px solid rgba(212,175,55,0.2); padding-top: 1rem; }
+    .quote-name { color: var(--white); font-weight: 600; font-size: 0.9rem; }
+    .quote-role { color: var(--gold); font-size: 0.78rem; margin-top: 0.2rem; }
+
+    /* ── ABOUT ── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .about-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.2); border-radius: 4px; padding: 2rem; }
+    .about-card-title { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 2rem; margin-bottom: 0.25rem; }
+    .about-card-sub { color: rgba(255,255,255,0.4); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+    .about-card-body { color: rgba(255,255,255,0.65); line-height: 1.8; }
+    .vm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 4rem; }
+    .vm-icon { color: var(--gold); font-size: 1.5rem; margin-bottom: 1rem; }
+    .vm-label { font-family: 'Playfair Display', serif; color: var(--gold); margin-bottom: 1rem; font-size: 1.2rem; }
+    .vm-text { color: rgba(255,255,255,0.65); line-height: 1.8; }
+
+    /* ── COMMITTEES ── */
+    .committee-section { margin-bottom: 3.5rem; }
+    .committee-heading { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 1.5rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem; }
+    .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+    .member-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.15); border-radius: 4px; padding: 1.25rem; transition: all 0.25s; }
+    .member-card:hover { border-color: rgba(212,175,55,0.5); background: rgba(212,175,55,0.05); }
+    .member-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(212,175,55,0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; font-size: 1rem; }
+    .member-name { color: var(--white); font-weight: 600; font-size: 0.95rem; }
+    .member-role { color: var(--gold); font-size: 0.78rem; margin: 0.2rem 0; }
+    .member-dept { color: rgba(255,255,255,0.35); font-size: 0.73rem; }
+
+    /* ── MILESTONES ── */
+    .filter-bar { display: flex; gap: 0.75rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+    .filter-btn {
+      background: rgba(212,175,55,0.08); color: var(--gold);
+      border: 1px solid rgba(212,175,55,0.3); padding: 0.5rem 1.25rem;
+      font-family: 'Cormorant Garamond', serif; font-size: 1rem; cursor: pointer;
+      border-radius: 2px; transition: all 0.2s;
+    }
+    .filter-btn.active { background: var(--gold); color: var(--navy); font-weight: 700; }
+    .milestone-icon { font-size: 1.8rem; }
+    .milestone-meta { text-align: right; }
+    .milestone-type { color: var(--gold); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
+    .milestone-year { color: rgba(255,255,255,0.3); font-size: 0.8rem; }
+    .milestone-title { font-family: 'Cormorant Garamond', serif; color: var(--white); font-size: 1.15rem; margin: 0.5rem 0; }
+    .milestone-desc { color: rgba(255,255,255,0.5); font-size: 0.88rem; line-height: 1.7; }
+
+    /* ── EDITORIALS ── */
+    .article-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 1.75rem; transition: all 0.3s; display: flex; flex-direction: column; }
+    .article-card:hover { border-color: rgba(212,175,55,0.4); transform: translateY(-4px); }
+    .article-tag { font-size: 0.65rem; letter-spacing: 0.15em; padding: 0.2rem 0.6rem; border-radius: 2px; text-transform: uppercase; }
+    .article-date { color: rgba(255,255,255,0.3); font-size: 0.78rem; }
+    .article-title { font-family: 'Playfair Display', serif; color: var(--white); font-size: 1.1rem; margin: 0.75rem 0 0.6rem; line-height: 1.4; }
+    .article-excerpt { color: rgba(255,255,255,0.5); font-size: 0.88rem; line-height: 1.7; flex: 1; margin-bottom: 1rem; }
+    .article-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem; }
+    .article-author { color: rgba(255,255,255,0.35); font-size: 0.78rem; }
+    .article-read { color: var(--gold); font-size: 0.75rem; }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; }
+    .contact-info-label { color: rgba(255,255,255,0.35); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+    .contact-info-val { color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.5; }
+    .contact-info-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .contact-icon { font-size: 1.2rem; margin-top: 2px; }
+    .form-input {
+      width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 3px; padding: 0.85rem 1rem; color: var(--white);
+      font-family: 'Cormorant Garamond', serif; font-size: 1rem; outline: none;
+      transition: border-color 0.2s; margin-bottom: 1rem;
+    }
+    .form-input:focus { border-color: rgba(212,175,55,0.6); }
+    .form-input::placeholder { color: rgba(255,255,255,0.3); }
+    textarea.form-input { resize: vertical; min-height: 120px; }
+    .success-box { background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.4); border-radius: 4px; padding: 2rem; text-align: center; display: none; }
+    .success-box.show { display: block; }
+    .success-check { font-size: 2.5rem; margin-bottom: 1rem; }
+    .success-title { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+    .success-sub { color: rgba(255,255,255,0.5); font-size: 0.9rem; margin-top: 0.5rem; }
+
+    /* ── FOOTER ── */
+    footer { background: #050C1E; border-top: 1px solid rgba(212,175,55,0.2); padding: 3rem 2rem 2rem; text-align: center; }
+    .footer-brand { display: flex; justify-content: center; gap: 12px; margin-bottom: 1.5rem; align-items: center; }
+    .footer-brand img { height: 40px; border-radius: 4px; }
+    .footer-brand-name { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+    .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .footer-link { background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; text-transform: capitalize; transition: color 0.2s; }
+    .footer-link:hover { color: var(--gold); }
+    .footer-copy { color: rgba(255,255,255,0.2); font-size: 0.8rem; letter-spacing: 0.1em; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .about-grid, .vm-grid, .contact-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-brand" onclick="showPage('home')">
+    <img src="cit_logo.png" alt="CIT" onerror="this.style.display='none'" />
+    <div class="nav-brand-text">
+      <div class="nav-brand-title">CACD & CTAF</div>
+      <div class="nav-brand-sub">Chennai Institute of Technology</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home')">Home</button>
+    <button class="nav-link" onclick="showPage('about')">About Us</button>
+    <button class="nav-link" onclick="showPage('committees')">Committees</button>
+    <button class="nav-link" onclick="showPage('milestones')">Awards & Events</button>
+    <button class="nav-link" onclick="showPage('editorials')">Editorials</button>
+    <button class="nav-link" onclick="showPage('contact')">Contact Us</button>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-link" onclick="showPage('home');toggleMenu()">Home</button>
+  <button class="mobile-link" onclick="showPage('about');toggleMenu()">About Us</button>
+  <button class="mobile-link" onclick="showPage('committees');toggleMenu()">Committees</button>
+  <button class="mobile-link" onclick="showPage('milestones');toggleMenu()">Awards & Events</button>
+  <button class="mobile-link" onclick="showPage('editorials');toggleMenu()">Editorials</button>
+  <button class="mobile-link" onclick="showPage('contact');toggleMenu()">Contact Us</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- HOME PAGE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-circle1"></div>
+    <div class="hero-circle2"></div>
+    <div class="hero-dot"></div>
+    <div class="hero-badge"><span>Chennai Institute of Technology</span></div>
+    <h1 class="hero-title">CACD <span>&</span> CTAF</h1>
+    <div class="hero-subtitle-wrap">
+      <p class="hero-subtitle" id="heroSubtitle">Transforming Culture.</p>
+    </div>
+    <p class="hero-desc">The Committee for Arts, Culture & Development and the CIT Technical & Arts Festival — driving creative excellence and cultural vibrancy at CIT since 2013.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('about')">Explore About Us</button>
+      <button class="btn-outline" onclick="showPage('milestones')">Our Milestones</button>
+    </div>
+    <div class="hero-scroll"><div class="hero-scroll-line"></div></div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stats-grid">
+      <div class="reveal">
+        <div class="stat-num" data-target="42" data-suffix="+">0+</div>
+        <div class="stat-label">Awards Won</div>
+      </div>
+      <div class="reveal" style="transition-delay:0.1s">
+        <div class="stat-num" data-target="5000" data-suffix="+">0+</div>
+        <div class="stat-label">Students Engaged</div>
+      </div>
+      <div class="reveal" style="transition-delay:0.2s">
+        <div class="stat-num" data-target="12" data-suffix="">0</div>
+        <div class="stat-label">Years of Excellence</div>
+      </div>
+      <div class="reveal" style="transition-delay:0.3s">
+        <div class="stat-num" data-target="80" data-suffix="+">0+</div>
+        <div class="stat-label">Events Conducted</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPCOMING EVENTS -->
+  <section class="section" style="background: var(--navy);">
+    <div class="section-inner">
+      <div class="reveal" style="text-align:center; margin-bottom:3rem;">
+        <p class="section-tag">What's Coming</p>
+        <h2 class="section-title" style="margin-bottom:0;">Upcoming Events</h2>
+      </div>
+      <div class="card-grid">
+        <div class="card reveal">
+          <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
+            <div class="event-date">MAR 15</div>
+            <span class="event-tag">CTAF</span>
+          </div>
+          <h3 class="event-title">Annual Cultural Fest 2025</h3>
+          <p class="event-desc">Three days of art, music, theatre & dance</p>
+        </div>
+        <div class="card reveal" style="transition-delay:0.12s">
+          <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
+            <div class="event-date">APR 02</div>
+            <span class="event-tag">CACD</span>
+          </div>
+          <h3 class="event-title">Design Thinking Workshop</h3>
+          <p class="event-desc">Hands-on session with industry experts</p>
+        </div>
+        <div class="card reveal" style="transition-delay:0.24s">
+          <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
+            <div class="event-date">APR 20</div>
+            <span class="event-tag">CACD</span>
+          </div>
+          <h3 class="event-title">Photography Exhibition</h3>
+          <p class="event-desc">Student works on display at the main gallery</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" style="background: var(--navy2);">
+    <div class="section-inner">
+      <div class="reveal" style="text-align:center; margin-bottom:3rem;">
+        <p class="section-tag">Voices</p>
+        <h2 class="section-title" style="margin-bottom:0;">What They Say</h2>
+      </div>
+      <div class="card-grid">
+        <div class="card reveal">
+          <div class="quote-mark">"</div>
+          <p class="quote-text">CACD transformed how I see design and leadership. The experiences here shaped my career.</p>
+          <div class="quote-divider">
+            <div class="quote-name">Aishwarya R.</div>
+            <div class="quote-role">Alumni, Batch 2023</div>
+          </div>
+        </div>
+        <div class="card reveal" style="transition-delay:0.12s">
+          <div class="quote-mark">"</div>
+          <p class="quote-text">CTAF is the highlight of the academic year. The energy, creativity, and camaraderie is unmatched.</p>
+          <div class="quote-divider">
+            <div class="quote-name">Karthik S.</div>
+            <div class="quote-role">Final Year, ECE</div>
+          </div>
+        </div>
+        <div class="card reveal" style="transition-delay:0.24s">
+          <div class="quote-mark">"</div>
+          <p class="quote-text">Watching students grow through CACD initiatives every year is the most rewarding part of my role.</p>
+          <div class="quote-divider">
+            <div class="quote-name">Dr. Meena P.</div>
+            <div class="quote-role">Faculty Coordinator</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- ABOUT PAGE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <section class="section" style="background:var(--navy); max-width:900px; margin:0 auto;">
+    <div class="reveal">
+      <p class="section-tag">Who We Are</p>
+      <h1 class="section-title-lg">About CACD & CTAF</h1>
+      <div class="section-rule"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <div class="about-card-title">CACD</div>
+        <div class="about-card-sub">Committee for Arts, Culture & Development</div>
+        <p class="about-card-body">CACD is the apex body responsible for nurturing and promoting artistic, cultural, and developmental activities at Chennai Institute of Technology. We serve as the bridge between academic excellence and holistic student development, orchestrating programs that bring out the best in every student.</p>
+      </div>
+      <div class="about-card reveal" style="transition-delay:0.15s">
+        <div class="about-card-title">CTAF</div>
+        <div class="about-card-sub">CIT Technical & Arts Festival</div>
+        <p class="about-card-body">CTAF is CIT's flagship annual festival — a grand convergence of technical innovation and artistic expression. Attracting thousands of participants from across Tamil Nadu, CTAF has grown into one of the most anticipated inter-collegiate festivals in the region.</p>
+      </div>
+    </div>
+    <div class="vm-grid">
+      <div class="card-gold reveal">
+        <div class="vm-icon">◈</div>
+        <div class="vm-label">Our Vision</div>
+        <p class="vm-text">To cultivate a vibrant, inclusive cultural ecosystem at CIT where every student can discover, develop, and celebrate their unique talents — fostering leaders who shape society through arts, culture, and innovation.</p>
+      </div>
+      <div class="card-gold reveal" style="transition-delay:0.15s">
+        <div class="vm-icon">◇</div>
+        <div class="vm-label">Our Mission</div>
+        <p class="vm-text">To organize transformative cultural and technical events, provide platforms for creative expression, recognize excellence, and build a community of confident, culturally aware students ready to contribute meaningfully to the world.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- COMMITTEES PAGE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="page-committees" class="page">
+  <section class="section" style="background:var(--navy); max-width:1000px; margin:0 auto;">
+    <div class="reveal">
+      <p class="section-tag">The People Behind</p>
+      <h1 class="section-title-lg">Our Committees</h1>
+      <div class="section-rule"></div>
+    </div>
+    <div class="committee-section reveal">
+      <div class="committee-heading">🎓 Faculty In-charge</div>
+      <div class="member-grid">
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Dr. S. Ramakrishnan</div><div class="member-role">Faculty In-charge, CACD</div><div class="member-dept">Department of CSE</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Prof. A. Jayalakshmi</div><div class="member-role">Faculty In-charge, CTAF</div><div class="member-dept">Department of ECE</div></div>
+      </div>
+    </div>
+    <div class="committee-section reveal">
+      <div class="committee-heading">📋 Faculty Coordinators</div>
+      <div class="member-grid">
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Dr. P. Venkatesh</div><div class="member-role">Faculty Coordinator</div><div class="member-dept">Department of Mechanical</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Ms. R. Supriya</div><div class="member-role">Faculty Coordinator</div><div class="member-dept">Department of IT</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Mr. K. Arjun</div><div class="member-role">Faculty Coordinator</div><div class="member-dept">Department of Civil</div></div>
+      </div>
+    </div>
+    <div class="committee-section reveal">
+      <div class="committee-heading">⭐ Office Bearers</div>
+      <div class="member-grid">
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Harish Kumar M.</div><div class="member-role">President</div><div class="member-dept">Final Year, ECE</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Priya Nair</div><div class="member-role">Vice President</div><div class="member-dept">Final Year, CSE</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Arjun Balaji</div><div class="member-role">Secretary</div><div class="member-dept">Third Year, IT</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Divya S.</div><div class="member-role">Treasurer</div><div class="member-dept">Third Year, Mech</div></div>
+      </div>
+    </div>
+    <div class="committee-section reveal">
+      <div class="committee-heading">🏛 Committee Heads</div>
+      <div class="member-grid">
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Rohit M.</div><div class="member-role">Cultural Committee Head</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Sneha K.</div><div class="member-role">Technical Committee Head</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Aravind P.</div><div class="member-role">Design & Media Head</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Lavanya R.</div><div class="member-role">Events & Logistics Head</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Kiran S.</div><div class="member-role">Outreach & PR Head</div></div>
+        <div class="member-card"><div class="member-avatar">👤</div><div class="member-name">Nithya V.</div><div class="member-role">Sponsorship Head</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- MILESTONES PAGE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="page-milestones" class="page">
+  <section class="section" style="background:var(--navy); max-width:1000px; margin:0 auto;">
+    <div class="reveal">
+      <p class="section-tag">Our Journey</p>
+      <h1 class="section-title-lg">Awards, Events & Milestones</h1>
+      <div class="section-rule"></div>
+    </div>
+    <div class="filter-bar reveal">
+      <button class="filter-btn active" onclick="filterMilestones('All', this)">All</button>
+      <button class="filter-btn" onclick="filterMilestones('Awards', this)">Awards</button>
+      <button class="filter-btn" onclick="filterMilestones('Events', this)">Events</button>
+      <button class="filter-btn" onclick="filterMilestones('Milestones', this)">Milestones</button>
+    </div>
+    <div class="card-grid" id="milestonesGrid">
+      <div class="card" data-type="Awards"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;"><span class="milestone-icon">🏆</span><div class="milestone-meta"><div class="milestone-type">Awards</div><div class="milestone-year">2024</div></div></div><h3 class="milestone-title">Best Cultural Committee — Anna University</h3><p class="milestone-desc">Recognised as the best cultural committee among affiliated colleges in Chennai zone.</p></div>
+      <div class="card" data-type="Events"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;"><span class="milestone-icon">🎉</span><div class="milestone-meta"><div class="milestone-type">Events</div><div class="milestone-year">2024</div></div></div><h3 class="milestone-title">CTAF 2024 — Record Attendance</h3><p class="milestone-desc">Over 4,200 participants from 65+ colleges making it the largest edition to date.</p></div>
+      <div class="card" data-type="Milestones"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;"><span class="milestone-icon">◈</span><div class="milestone-meta"><div class="milestone-type">Milestones</div><div class="milestone-year">2023</div></div></div><h3 class="milestone-title">10 Years of CACD</h3><p class="milestone-desc">Celebrated a decade of cultural excellence with a grand alumni reunion and exhibition.</p></div>
+      <div class="card" data-type="Awards"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;"><span class="milestone-icon">🏆</span><div class="milestone-meta"><div class="milestone-type">Awards</div><div class="milestone-year">2023</div></div></div><h3 class="milestone-title">State-Level Photography Award</h3><p class="milestone-desc">CIT Photography Club under CACD won the state-level inter-collegiate photography competition.</p></div>
+      <div class="card" data-type="Events"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;"><span class="milestone-icon">🎭</span><div class="milestone-meta"><div class="milestone-type">Events</div><div class="milestone-year">2023</div></div></div><h3 class="milestone-title">National Level Dance Competition</h3><p class="milestone-desc">Hosted a national-level Bharatanatyam and contemporary dance fest with 300+ participants.</p></div>
+      <div class="card" data-type="Awards"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;"><span class="milestone-icon">🥇</span><div class="milestone-meta"><div class="milestone-type">Awards</div><div class="milestone-year">2022</div></div></div><h3 class="milestone-title">Best Fest Organization Award</h3><p class="milestone-desc">CTAF 2022 was awarded the best-organized technical-cultural fest in Tamil Nadu.</p></div>
+      <div class="card" data-type="Milestones"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;"><span class="milestone-icon">💡</span><div class="milestone-meta"><div class="milestone-type">Milestones</div><div class="milestone-year">2022</div></div></div><h3 class="milestone-title">Digital Transformation of CTAF</h3><p class="milestone-desc">First fully hybrid edition — online + offline events with 10,000+ virtual viewers.</p></div>
+      <div class="card" data-type="Events"><div style="display:flex;justify-content:space-between;margin-bottom:1rem;"><span class="milestone-icon">🌐</span><div class="milestone-meta"><div class="milestone-type">Events</div><div class="milestone-year">2021</div></div></div><h3 class="milestone-title">Virtual CTAF during COVID-19</h3><p class="milestone-desc">Successfully conducted a full-scale virtual fest, keeping student spirit alive during the pandemic.</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- EDITORIALS PAGE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="page-editorials" class="page">
+  <section class="section" style="background:var(--navy); max-width:1000px; margin:0 auto;">
+    <div class="reveal">
+      <p class="section-tag">Words & Ideas</p>
+      <h1 class="section-title-lg">Editorials & Articles</h1>
+      <div class="section-rule"></div>
+    </div>
+    <div class="card-grid">
+      <div class="article-card reveal"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span class="article-tag" style="background:rgba(212,175,55,0.15);color:#D4AF37;">Editorial</span><span class="article-date">Feb 2025</span></div><h3 class="article-title">The Role of Art in Technical Education</h3><p class="article-excerpt">Exploring how integrating creative disciplines into engineering curricula produces more empathetic and innovative graduates.</p><div class="article-footer"><span class="article-author">By Dr. Meena P.</span><span class="article-read">5 min read</span></div></div>
+      <div class="article-card reveal" style="transition-delay:0.1s"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span class="article-tag" style="background:rgba(91,140,255,0.15);color:#5B8CFF;">Article</span><span class="article-date">Jan 2025</span></div><h3 class="article-title">CTAF 2024: A Chronicle of Excellence</h3><p class="article-excerpt">A behind-the-scenes look at how 200+ student volunteers worked for 6 months to produce the most ambitious CTAF edition.</p><div class="article-footer"><span class="article-author">By Harish Kumar M.</span><span class="article-read">8 min read</span></div></div>
+      <div class="article-card reveal" style="transition-delay:0.2s"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span class="article-tag" style="background:rgba(255,107,107,0.15);color:#FF6B6B;">Opinion</span><span class="article-date">Dec 2024</span></div><h3 class="article-title">Why Student Clubs Matter More Than Ever</h3><p class="article-excerpt">In an era of remote learning and social isolation, cultural clubs serve as the last bastion of community on campus.</p><div class="article-footer"><span class="article-author">By Priya Nair</span><span class="article-read">4 min read</span></div></div>
+      <div class="article-card reveal"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span class="article-tag" style="background:rgba(91,212,160,0.15);color:#5BD4A0;">Feature</span><span class="article-date">Nov 2024</span></div><h3 class="article-title">Photography as a Tool for Social Change</h3><p class="article-excerpt">Our prize-winning documentary photography project on Chennai's urban transformation and what it means for communities.</p><div class="article-footer"><span class="article-author">By CACD Photography Club</span><span class="article-read">6 min read</span></div></div>
+      <div class="article-card reveal" style="transition-delay:0.1s"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span class="article-tag" style="background:rgba(212,175,55,0.15);color:#D4AF37;">Editorial</span><span class="article-date">Oct 2024</span></div><h3 class="article-title">Celebrating 10 Years of Cultural Growth</h3><p class="article-excerpt">From a committee of 15 students to an organization of 400+, this is the story of CACD's decade of growth.</p><div class="article-footer"><span class="article-author">By Alumni Committee</span><span class="article-read">7 min read</span></div></div>
+      <div class="article-card reveal" style="transition-delay:0.2s"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span class="article-tag" style="background:rgba(91,140,255,0.15);color:#5B8CFF;">Article</span><span class="article-date">Sep 2024</span></div><h3 class="article-title">Dance as Discipline: Lessons from the Stage</h3><p class="article-excerpt">What years of classical Bharatanatyam training taught me about leadership, precision, and graceful recovery from mistakes.</p><div class="article-footer"><span class="article-author">By Lavanya R.</span><span class="article-read">5 min read</span></div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- CONTACT PAGE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="page-contact" class="page">
+  <section class="section" style="background:var(--navy); max-width:800px; margin:0 auto;">
+    <div class="reveal">
+      <p class="section-tag">Get In Touch</p>
+      <h1 class="section-title-lg">Feedback & Contact</h1>
+      <div class="section-rule"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="reveal">
+        <h3 style="font-family:'Playfair Display',serif;color:var(--gold);margin-bottom:1.5rem;">Contact Info</h3>
+        <div class="contact-info-item"><span class="contact-icon">📍</span><div><div class="contact-info-label">Address</div><div class="contact-info-val">Chennai Institute of Technology, Kundrathur, Chennai – 600 069</div></div></div>
+        <div class="contact-info-item"><span class="contact-icon">✉️</span><div><div class="contact-info-label">Email</div><div class="contact-info-val">cacd@citchennai.net</div></div></div>
+        <div class="contact-info-item"><span class="contact-icon">📞</span><div><div class="contact-info-label">Phone</div><div class="contact-info-val">+91 44 2680 1999</div></div></div>
+        <div class="contact-info-item"><span class="contact-icon">🌐</span><div><div class="contact-info-label">Website</div><div class="contact-info-val">www.citchennai.net</div></div></div>
+      </div>
+      <div class="reveal" style="transition-delay:0.15s">
+        <div class="success-box" id="successBox">
+          <div class="success-check">✓</div>
+          <div class="success-title">Message Sent!</div>
+          <div class="success-sub">We'll get back to you shortly.</div>
+        </div>
+        <div id="contactForm">
+          <input class="form-input" type="text" placeholder="Your Name" id="fname" required />
+          <input class="form-input" type="email" placeholder="Your Email" id="femail" required />
+          <input class="form-input" type="text" placeholder="Subject" id="fsubject" required />
+          <textarea class="form-input" placeholder="Your message..." id="fmessage" rows="5" required></textarea>
+          <button class="btn-primary" style="width:100%;" onclick="submitForm()">Send Message</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <img src="cit_logo.png" alt="CIT" onerror="this.style.display='none'" />
+    <div class="footer-brand-name">CACD & CTAF</div>
+  </div>
+  <div class="footer-links">
+    <button class="footer-link" onclick="showPage('home')">Home</button>
+    <button class="footer-link" onclick="showPage('about')">About</button>
+    <button class="footer-link" onclick="showPage('committees')">Committees</button>
+    <button class="footer-link" onclick="showPage('milestones')">Awards</button>
+    <button class="footer-link" onclick="showPage('editorials')">Editorials</button>
+    <button class="footer-link" onclick="showPage('contact')">Contact</button>
+  </div>
+  <p class="footer-copy">© 2025 CACD & CTAF — Chennai Institute of Technology. All rights reserved.</p>
+</footer>
+
+<script>
+  // ── ROUTING ──
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    const links = document.querySelectorAll('.nav-link');
+    links.forEach(l => { if (l.textContent.toLowerCase().includes(id === 'home' ? 'home' : id === 'about' ? 'about' : id === 'committees' ? 'committee' : id === 'milestones' ? 'awards' : id === 'editorials' ? 'editorial' : 'contact')) l.classList.add('active'); });
+    window.scrollTo(0, 0);
+    initReveal();
+    if (id === 'home') initCounters();
+  }
+
+  // ── MOBILE MENU ──
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // ── NAVBAR SCROLL ──
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ── HERO SUBTITLE ROTATION ──
+  const headlines = ['Transforming Culture.', 'Shaping Leaders.', 'Celebrating Excellence.'];
+  let hIdx = 0;
+  setInterval(() => {
+    hIdx = (hIdx + 1) % headlines.length;
+    const el = document.getElementById('heroSubtitle');
+    el.style.animation = 'none';
+    el.textContent = headlines[hIdx];
+    void el.offsetWidth;
+    el.style.animation = 'fadeSlide 0.6s ease forwards';
+  }, 3000);
+
+  // ── SCROLL REVEAL ──
+  function initReveal() {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('#page-' + currentPage() + ' .reveal').forEach(el => obs.observe(el));
+  }
+
+  function currentPage() {
+    const active = document.querySelector('.page.active');
+    return active ? active.id.replace('page-', '') : 'home';
+  }
+
+  // ── COUNTERS ──
+  function initCounters() {
+    document.querySelectorAll('.stat-num').forEach(el => {
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            let count = 0;
+            const step = Math.ceil(target / 60);
+            const timer = setInterval(() => {
+              count += step;
+              if (count >= target) { el.textContent = target + suffix; clearInterval(timer); }
+              else el.textContent = count + suffix;
+            }, 25);
+            obs.unobserve(el);
+          }
+        });
+      }, { threshold: 0.5 });
+      obs.observe(el);
+    });
+  }
+
+  // ── MILESTONES FILTER ──
+  function filterMilestones(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#milestonesGrid .card').forEach(card => {
+      card.style.display = (type === 'All' || card.dataset.type === type) ? 'block' : 'none';
+    });
+  }
+
+  // ── CONTACT FORM ──
+  function submitForm() {
+    const name = document.getElementById('fname').value;
+    const email = document.getElementById('femail').value;
+    const subject = document.getElementById('fsubject').value;
+    const message = document.getElementById('fmessage').value;
+    if (!name || !email || !subject || !message) { alert('Please fill in all fields.'); return; }
+    document.getElementById('contactForm').style.display = 'none';
+    document.getElementById('successBox').classList.add('show');
+    setTimeout(() => {
+      document.getElementById('successBox').classList.remove('show');
+      document.getElementById('contactForm').style.display = 'block';
+      document.getElementById('fname').value = '';
+      document.getElementById('femail').value = '';
+      document.getElementById('fsubject').value = '';
+      document.getElementById('fmessage').value = '';
+    }, 4000);
+  }
+
+  // ── INIT ──
+  window.addEventListener('DOMContentLoaded', () => {
+    initReveal();
+    initCounters();
+  });
+</script>
+</body>
+</html>
